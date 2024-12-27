@@ -1,5 +1,6 @@
 import { Image, StyleSheet, View } from 'react-native';
 import Text from './Text';
+import theme from '../theme';
 
 const RepositoryItem = ({ item }) => {
   const gapSize = 12;
@@ -24,16 +25,34 @@ const RepositoryItem = ({ item }) => {
       flexDirection: 'row',
       gap: gapSize,
     },
+    detailsContainer: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      gap: 4,
+      flex: 1,
+    },
+    descriptionText: {
+      maxWidth: '99%',
+    },
+    languageContainer: {
+      backgroundColor: theme.colors.primary,
+      borderRadius: 5,
+      padding: 4,
+    },
+    profilePicture: {
+      width: 40,
+      height: 40,
+      borderRadius: 5,
+    },
   });
 
   const statItem = (value, name) => {
     const valueString =
       value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value.toString();
-
     return (
       <View style={styles.statItem}>
         <Text fontWeight="bold">{valueString}</Text>
-        <Text>{name}</Text>
+        <Text color="textSecondary">{name}</Text>
       </View>
     );
   };
@@ -42,18 +61,20 @@ const RepositoryItem = ({ item }) => {
     <View style={styles.container}>
       <View style={styles.infoContainer}>
         <Image
-          style={{ width: 40, height: 40, borderRadius: 5 }}
+          style={styles.profilePicture}
           source={{ uri: item.ownerAvatarUrl }}
         />
-        <View>
+        <View style={styles.detailsContainer}>
           <View>
-            <Text>{item.fullName}</Text>
+            <Text fontWeight="bold">{item.fullName}</Text>
           </View>
           <View>
-            <Text>{item.description}</Text>
+            <Text color="textSecondary" style={styles.descriptionText}>
+              {item.description}
+            </Text>
           </View>
-          <View>
-            <Text>{item.language}</Text>
+          <View style={styles.languageContainer}>
+            <Text color="white">{item.language}</Text>
           </View>
         </View>
       </View>
@@ -63,15 +84,6 @@ const RepositoryItem = ({ item }) => {
         {statItem(item.reviewCount, 'Reviews')}
         {statItem(item.ratingAverage, 'Rating')}
       </View>
-      {/* <Text color="textSecondary">
-        Full name: {item.fullName} {'\n'}
-        Description: {item.description} {'\n'}
-        Language: {item.language} {'\n'}
-        Stars: {item.stargazersCount} {'\n'}
-        Forks: {item.forksCount} {'\n'}
-        Reviews: {item.reviewCount} {'\n'}
-        Rating: {item.ratingAverage}
-      </Text> */}
     </View>
   );
 };
