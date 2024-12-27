@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   inputError: {
-    borderColor: 'red',
+    borderColor: theme.colors.error,
   },
   buttonContainer: {
     backgroundColor: theme.colors.primary,
@@ -68,7 +68,7 @@ const SignInForm = ({ onSubmit }) => {
           onChangeText={formik.handleChange('username')}
         />
         {formik.touched.username && formik.errors.username && (
-          <Text style={{ color: 'red' }}>{formik.errors.username}</Text>
+          <Text color="error">{formik.errors.username}</Text>
         )}
       </View>
       <View>
@@ -80,7 +80,7 @@ const SignInForm = ({ onSubmit }) => {
           secureTextEntry
         />
         {formik.touched.password && formik.errors.password && (
-          <Text style={{ color: 'red' }}>{formik.errors.password}</Text>
+          <Text color="error">{formik.errors.password}</Text>
         )}
       </View>
       <Pressable onPress={formik.handleSubmit} style={styles.buttonContainer}>
