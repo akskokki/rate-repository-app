@@ -19,6 +19,9 @@ const theme = {
     normal: '400',
     bold: '700',
   },
+  spacing: {
+    largeGap: 12,
+  },
 };
 
 export default theme;

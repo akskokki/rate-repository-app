@@ -3,7 +3,7 @@ import Text from './Text';
 import theme from '../theme';
 
 const RepositoryItem = ({ item }) => {
-  const gapSize = 12;
+  const gapSize = theme.spacing.largeGap;
 
   const styles = StyleSheet.create({
     container: {
