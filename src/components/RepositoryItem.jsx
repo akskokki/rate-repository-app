@@ -1,8 +1,9 @@
-import { Image, Pressable, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import * as Linking from 'expo-linking';
 
 import Text from './Text';
 import theme from '../theme';
+import Button from './Button';
 
 const gapSize = theme.spacing.largeGap;
 
@@ -41,12 +42,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 5,
-  },
-  buttonContainer: {
-    backgroundColor: theme.colors.primary,
-    borderRadius: 5,
-    height: 50,
-    justifyContent: 'center',
   },
 });
 
@@ -94,11 +89,7 @@ const RepositoryItem = ({ item, singleView }) => {
         {statItem(item.ratingAverage, 'Rating')}
       </View>
       {singleView && (
-        <Pressable style={styles.buttonContainer} onPress={handleGithubLink}>
-          <Text color="white" fontWeight="bold" align="center">
-            Open in GitHub
-          </Text>
-        </Pressable>
+        <Button text="Open in GitHub" onPress={handleGithubLink} />
       )}
     </View>
   );

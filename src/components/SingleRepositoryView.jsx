@@ -69,6 +69,7 @@ const SingleRepositoryView = () => {
   const { id } = useParams();
   const { data, loading, error } = useQuery(GET_REPOSITORY, {
     variables: { repositoryId: id },
+    fetchPolicy: 'cache-and-network',
   });
 
   if (loading) return <Text>Loading...</Text>;
