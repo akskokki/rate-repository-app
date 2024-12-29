@@ -32,9 +32,6 @@ const styles = StyleSheet.create({
     gap: 4,
     flex: 1,
   },
-  descriptionText: {
-    maxWidth: '99%',
-  },
   languageContainer: {
     backgroundColor: theme.colors.primary,
     borderRadius: 5,
