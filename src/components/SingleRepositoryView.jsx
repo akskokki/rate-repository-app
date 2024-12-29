@@ -72,7 +72,7 @@ const SingleRepositoryView = () => {
     fetchPolicy: 'cache-and-network',
   });
 
-  if (loading) return <Text>Loading...</Text>;
+  if (!data && loading) return <Text>Loading...</Text>;
   if (error) return <Text>Error fetching repository</Text>;
 
   const repository = data.repository;
