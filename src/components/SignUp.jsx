@@ -28,12 +28,20 @@ const SignUpForm = ({ onSubmit }) => {
   };
 
   const validationSchema = yup.object().shape({
-    username: yup.string().min(5).max(30).required(),
-    password: yup.string().required(),
+    username: yup
+      .string()
+      .min(5, 'Username must be 5-30 characters long')
+      .max(30, 'Username must be 5-30 characters long')
+      .required('Username is required'),
+    password: yup
+      .string()
+      .min(5, 'Password must be 5-30 characters long')
+      .max(30, 'Password must be 5-30 characters long')
+      .required('Password is required'),
     passwordConfirm: yup
       .string()
       .oneOf([yup.ref('password'), null], 'Passwords must match')
-      .required(),
+      .required('Password confirmation is required'),
   });
 
   const formik = useFormik({

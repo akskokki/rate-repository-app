@@ -26,10 +26,18 @@ const CreateReviewForm = ({ onSubmit }) => {
     text: '',
   };
 
+  const ratingError = 'Rating must be an integer between 0 and 100';
+
   const validationSchema = yup.object().shape({
-    ownerName: yup.string().required(),
-    repositoryName: yup.string().required(),
-    rating: yup.number().min(0).max(100).required(),
+    ownerName: yup.string().required('Repository owner name is required'),
+    repositoryName: yup.string().required('Repository name is required'),
+    rating: yup
+      .number()
+      .typeError(ratingError)
+      .integer(ratingError)
+      .min(0, ratingError)
+      .max(100, ratingError)
+      .required('Rating is required'),
     text: yup.string(),
   });
 
@@ -38,8 +46,6 @@ const CreateReviewForm = ({ onSubmit }) => {
     validationSchema,
     onSubmit,
   });
-
-  // console.log(JSON.stringify(formik, null, 2));
 
   return (
     <View style={styles.container}>
@@ -74,7 +80,6 @@ const CreateReview = () => {
 
   if (loading) return <Text>Submitting...</Text>;
   if (error) return <Text>Submission error</Text>;
-  // if (data) navigate(`/repositories/${data.createReview.repositoryId}`);
 
   const onSubmit = async (values) => {
     console.log(values);
