@@ -69,19 +69,19 @@ const CreateReviewForm = ({ onSubmit }) => {
 };
 
 const CreateReview = () => {
-  const [createReview, { data, loading, error }] = useMutation(CREATE_REVIEW);
+  const [createReview, { loading, error }] = useMutation(CREATE_REVIEW);
   const navigate = useNavigate();
 
   if (loading) return <Text>Submitting...</Text>;
   if (error) return <Text>Submission error</Text>;
-  console.log(JSON.stringify(data, null, 2));
-  if (data) navigate(`/repositories/${data.createReview.repositoryId}`);
+  // if (data) navigate(`/repositories/${data.createReview.repositoryId}`);
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
     console.log(values);
-    createReview({
+    const response = await createReview({
       variables: { review: { ...values, rating: Number(values.rating) } },
-    }).catch((e) => console.log(JSON.stringify(e, null, 2)));
+    });
+    navigate(`/repositories/${response.data.createReview.repositoryId}`);
   };
 
   return <CreateReviewForm onSubmit={onSubmit} />;
