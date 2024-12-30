@@ -1,26 +1,44 @@
-import { FlatList, View, StyleSheet, Pressable } from 'react-native';
+import { FlatList, View, StyleSheet, Pressable, TextInput } from 'react-native';
 import RepositoryItem from './RepositoryItem';
 import useRepositories from '../hooks/useRepositories';
 import { useNavigate } from 'react-router-native';
 import { Picker } from '@react-native-picker/picker';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import theme from '../theme';
+import React from 'react';
+import { useDebounce } from 'use-debounce';
 
 const styles = StyleSheet.create({
   separator: {
-    height: 10,
+    height: theme.spacing.largeGap,
+  },
+  headerContainer: {
+    display: 'flex',
+    padding: theme.spacing.largeGap,
+    gap: theme.spacing.largeGap,
+  },
+  searchBar: {
+    backgroundColor: theme.colors.white,
+    borderColor: theme.colors.textSecondary,
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 50,
+    paddingLeft: 10,
   },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-const RepositoryListHeader = ({ order, setOrder }) => {
-  const handleChange = (value) => {
-    setOrder(value);
-  };
-
+const RepositoryListHeader = ({ order, setOrder, filter, setFilter }) => {
   return (
-    <View>
-      <Picker selectedValue={order} onValueChange={handleChange}>
+    <View style={styles.headerContainer}>
+      <TextInput
+        placeholder="Search repositories..."
+        value={filter}
+        onChangeText={setFilter}
+        style={styles.searchBar}
+      />
+      <Picker selectedValue={order} onValueChange={setOrder}>
         <Picker.Item label="Latest repositories" value={'latest'} />
         <Picker.Item
           label="Highest rated repositories"
@@ -32,15 +50,61 @@ const RepositoryListHeader = ({ order, setOrder }) => {
   );
 };
 
+// export class RepositoryListContainer extends React.Component {
+//   renderHeader = () => {
+//     const { order, setOrder, filter, setFilter } = this.props;
+//     return (
+//       <RepositoryListHeader
+//         order={order}
+//         setOrder={setOrder}
+//         filter={filter}
+//         setFilter={setFilter}
+//       />
+//     );
+//   };
+//   renderItem = ({ item }) => {
+//     const handlePress = () => this.props.navigate(`/repositories/${item.id}`);
+//     return (
+//       <Pressable onPress={handlePress}>
+//         <RepositoryItem item={item} />
+//       </Pressable>
+//     );
+//   };
+//   render() {
+//     return (
+//       <FlatList
+//         data={this.props.repositories}
+//         ItemSeparatorComponent={ItemSeparator}
+//         renderItem={this.renderItem}
+//         keyExtractor={(item) => item.id}
+//         ListHeaderComponent={this.renderHeader}
+//       />
+//     );
+//   }
+// }
+
 export const RepositoryListContainer = ({
   repositories,
   navigate,
   order,
   setOrder,
+  filter,
+  setFilter,
 }) => {
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
+
+  const renderHeader = useMemo(() => {
+    return (
+      <RepositoryListHeader
+        order={order}
+        setOrder={setOrder}
+        filter={filter}
+        setFilter={setFilter}
+      />
+    );
+  }, [order, filter]);
 
   const renderItem = ({ item }) => {
     const handlePress = () => navigate(`/repositories/${item.id}`);
@@ -58,17 +122,19 @@ export const RepositoryListContainer = ({
       ItemSeparatorComponent={ItemSeparator}
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
-      ListHeaderComponent={() => (
-        <RepositoryListHeader order={order} setOrder={setOrder} />
-      )}
+      ListHeaderComponent={renderHeader}
     />
   );
 };
 
 const RepositoryList = () => {
   const [order, setOrder] = useState('latest');
-  const { repositories } = useRepositories(order);
+  const [filter, setFilter] = useState('');
+  const [debouncedFilter] = useDebounce(filter, 500);
+  const { repositories } = useRepositories(order, debouncedFilter);
   const navigate = useNavigate();
+
+  console.log(filter);
 
   return (
     <RepositoryListContainer
@@ -76,6 +142,8 @@ const RepositoryList = () => {
       navigate={navigate}
       order={order}
       setOrder={setOrder}
+      filter={filter}
+      setFilter={setFilter}
     />
   );
 };

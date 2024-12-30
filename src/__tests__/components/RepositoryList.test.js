@@ -47,7 +47,14 @@ describe('RepositoryList', () => {
         ],
       };
 
-      render(<RepositoryListContainer repositories={repositories} />);
+      render(
+        <RepositoryListContainer
+          repositories={repositories}
+          navigate={jest.fn()}
+        />
+      );
+
+      screen.debug();
 
       const repositoryItems = screen.getAllByTestId('repositoryItem');
       const [firstRepositoryItem, secondRepositoryItem] = repositoryItems;
