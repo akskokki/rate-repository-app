@@ -1,14 +1,19 @@
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import theme from '../theme';
 import Text from './Text';
 import { format } from 'date-fns';
+import Button from './Button';
 
 const styles = StyleSheet.create({
-  reviewContainer: {
+  container: {
     backgroundColor: theme.colors.white,
     display: 'flex',
-    flexDirection: 'row',
     padding: theme.spacing.largeGap,
+    gap: theme.spacing.largeGap,
+  },
+  reviewContainer: {
+    display: 'flex',
+    flexDirection: 'row',
     gap: theme.spacing.largeGap,
   },
   reviewScoreContainer: {
@@ -27,11 +32,33 @@ const styles = StyleSheet.create({
   reviewText: {
     paddingTop: 3,
   },
+  buttonsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing.largeGap,
+  },
+  button: {
+    flex: 1,
+  },
+  deleteButton: {
+    backgroundColor: theme.colors.error,
+  },
 });
 
-const ReviewItem = ({ review, myReviews = false }) => {
+const ReviewItem = ({ review, myReviews = false, navigate, deleteReview }) => {
+  const handleDelete = () =>
+    Alert.alert(
+      'Delete review',
+      'Are you sure you want to delete this review?',
+      [
+        { text: 'Cancel' },
+        { text: 'Delete', onPress: () => deleteReview(review.id) },
+      ],
+      { cancelable: true }
+    );
+
   return (
-    <>
+    <View style={styles.container}>
       <View style={styles.reviewContainer}>
         <View style={styles.reviewScoreContainer}>
           <Text color="primary" fontWeight="bold" align="center">
@@ -48,7 +75,21 @@ const ReviewItem = ({ review, myReviews = false }) => {
           <Text style={styles.reviewText}>{review.text}</Text>
         </View>
       </View>
-    </>
+      {myReviews && (
+        <View style={styles.buttonsContainer}>
+          <Button
+            style={styles.button}
+            text="View repository"
+            onPress={() => navigate(`/repositories/${review.repository.id}`)}
+          />
+          <Button
+            style={[styles.button, styles.deleteButton]}
+            text="Delete review"
+            onPress={handleDelete}
+          />
+        </View>
+      )}
+    </View>
   );
 };
 
