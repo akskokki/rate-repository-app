@@ -1,9 +1,8 @@
 import { useQuery } from '@apollo/client';
 import { GET_REPOSITORIES } from '../graphql/queries';
 
-const useRepositories = (order, filter) => {
+const useRepositories = (order, filter, first) => {
   let orderVars;
-
   switch (order) {
     case 'latest':
       orderVars = { orderBy: 'CREATED_AT', orderDirection: 'DESC' };
@@ -16,14 +15,37 @@ const useRepositories = (order, filter) => {
       break;
   }
 
-  const { data, error, loading } = useQuery(GET_REPOSITORIES, {
-    fetchPolicy: 'cache-and-network',
-    variables: { ...orderVars, searchKeyword: filter },
-  });
+  const variables = { ...orderVars, searchKeyword: filter, first };
 
-  const repositories = data ? data.repositories : null;
+  const { data, error, loading, fetchMore, ...result } = useQuery(
+    GET_REPOSITORIES,
+    {
+      fetchPolicy: 'cache-and-network',
+      variables,
+    }
+  );
 
-  return { repositories, error, loading };
+  const handleFetchMore = () => {
+    const canFetchMore = !loading && data?.repositories.pageInfo.hasNextPage;
+    if (!canFetchMore) {
+      return;
+    }
+
+    fetchMore({
+      variables: {
+        after: data.repositories.pageInfo.endCursor,
+        ...variables,
+      },
+    });
+  };
+
+  return {
+    repositories: data?.repositories,
+    fetchMore: handleFetchMore,
+    error,
+    loading,
+    ...result,
+  };
 };
 
 export default useRepositories;

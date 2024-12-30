@@ -46,41 +46,9 @@ const RepositoryListHeader = ({ order, setOrder, filter, setFilter }) => {
   );
 };
 
-// export class RepositoryListContainer extends React.Component {
-//   renderHeader = () => {
-//     const { order, setOrder, filter, setFilter } = this.props;
-//     return (
-//       <RepositoryListHeader
-//         order={order}
-//         setOrder={setOrder}
-//         filter={filter}
-//         setFilter={setFilter}
-//       />
-//     );
-//   };
-//   renderItem = ({ item }) => {
-//     const handlePress = () => this.props.navigate(`/repositories/${item.id}`);
-//     return (
-//       <Pressable onPress={handlePress}>
-//         <RepositoryItem item={item} />
-//       </Pressable>
-//     );
-//   };
-//   render() {
-//     return (
-//       <FlatList
-//         data={this.props.repositories}
-//         ItemSeparatorComponent={ItemSeparator}
-//         renderItem={this.renderItem}
-//         keyExtractor={(item) => item.id}
-//         ListHeaderComponent={this.renderHeader}
-//       />
-//     );
-//   }
-// }
-
 export const RepositoryListContainer = ({
   repositories,
+  onEndReach,
   navigate,
   order,
   setOrder,
@@ -119,6 +87,8 @@ export const RepositoryListContainer = ({
       renderItem={renderItem}
       keyExtractor={(item) => item.id}
       ListHeaderComponent={renderHeader}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.2}
     />
   );
 };
@@ -127,14 +97,21 @@ const RepositoryList = () => {
   const [order, setOrder] = useState('latest');
   const [filter, setFilter] = useState('');
   const [debouncedFilter] = useDebounce(filter, 500);
-  const { repositories } = useRepositories(order, debouncedFilter);
+  const { repositories, fetchMore } = useRepositories(
+    order,
+    debouncedFilter,
+    8
+  );
   const navigate = useNavigate();
 
-  console.log(filter);
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   return (
     <RepositoryListContainer
       repositories={repositories}
+      onEndReach={onEndReach}
       navigate={navigate}
       order={order}
       setOrder={setOrder}

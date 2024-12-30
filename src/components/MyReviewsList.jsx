@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { CURRENT_USER } from '../graphql/queries';
 import { FlatList } from 'react-native';
+import { useNavigate } from 'react-router-native';
+
 import ItemSeparator from './ItemSeparator';
 import ReviewItem from './ReviewItem';
-import { useNavigate } from 'react-router-native';
+import { CURRENT_USER } from '../graphql/queries';
 import { DELETE_REVIEW } from '../graphql/mutations';
 
 const MyReviewsList = () => {
