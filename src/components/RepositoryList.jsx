@@ -7,11 +7,9 @@ import { useMemo, useState } from 'react';
 import theme from '../theme';
 import React from 'react';
 import { useDebounce } from 'use-debounce';
+import ItemSeparator from './ItemSeparator';
 
 const styles = StyleSheet.create({
-  separator: {
-    height: theme.spacing.largeGap,
-  },
   headerContainer: {
     display: 'flex',
     padding: theme.spacing.largeGap,
@@ -26,8 +24,6 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
 });
-
-const ItemSeparator = () => <View style={styles.separator} />;
 
 const RepositoryListHeader = ({ order, setOrder, filter, setFilter }) => {
   return (

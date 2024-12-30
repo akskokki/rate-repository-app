@@ -1,66 +1,18 @@
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-native';
-import { format } from 'date-fns';
 
 import { GET_REPOSITORY } from '../graphql/queries';
 import Text from './Text';
 import RepositoryItem from './RepositoryItem';
-import { FlatList, StyleSheet, View } from 'react-native';
-import theme from '../theme';
-
-const styles = StyleSheet.create({
-  separator: {
-    height: 10,
-  },
-  reviewContainer: {
-    backgroundColor: theme.colors.white,
-    display: 'flex',
-    flexDirection: 'row',
-    padding: theme.spacing.largeGap,
-    gap: theme.spacing.largeGap,
-  },
-  reviewScoreContainer: {
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-    height: 40,
-    width: 40,
-    borderRadius: 20,
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  reviewDetailsContainer: {
-    display: 'flex',
-    flex: 1,
-  },
-  reviewText: {
-    paddingTop: 3,
-  },
-});
-
-const ItemSeparator = () => <View style={styles.separator} />;
+import { FlatList } from 'react-native';
+import ReviewItem from './ReviewItem';
+import ItemSeparator from './ItemSeparator';
 
 const RepositoryInfo = ({ repository }) => {
-  return <RepositoryItem item={repository} singleView />;
-};
-
-const ReviewItem = ({ review }) => {
   return (
     <>
+      <RepositoryItem item={repository} singleView />
       <ItemSeparator />
-      <View style={styles.reviewContainer}>
-        <View style={styles.reviewScoreContainer}>
-          <Text color="primary" fontWeight="bold" align="center">
-            {review.rating}
-          </Text>
-        </View>
-        <View style={styles.reviewDetailsContainer}>
-          <Text fontWeight="bold">{review.user.username}</Text>
-          <Text color="textSecondary">
-            {format(new Date(review.createdAt), 'yyyy-MM-dd, hh:mm')}
-          </Text>
-          <Text style={styles.reviewText}>{review.text}</Text>
-        </View>
-      </View>
     </>
   );
 };
@@ -81,6 +33,7 @@ const SingleRepositoryView = () => {
   return (
     <FlatList
       data={reviews}
+      ItemSeparatorComponent={ItemSeparator}
       renderItem={({ item }) => <ReviewItem review={item} />}
       keyExtractor={({ id }) => id}
       ListHeaderComponent={() => <RepositoryInfo repository={repository} />}

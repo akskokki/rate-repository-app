@@ -25,7 +25,8 @@ const AppBar = () => {
         <AppBarTab tabName="Repositories" to="/" />
         {data?.me ? (
           <>
-            <AppBarTab tabName="Create a review" to="/createReview" />
+            <AppBarTab tabName="Create a review" to="/createreview" />
+            <AppBarTab tabName="My reviews" to="/myreviews" />
             <AppBarTab tabName="Sign out" to="/signout" />
           </>
         ) : (
